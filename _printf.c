@@ -11,46 +11,39 @@
 
 int _printf(const char *format, ...)
 {
-int count;
-va_list args;
+	int i = 0, count = 0, chars;
+	va_list args;
 
-va_start(args, format);
-
-count = 0;
-while (*format != '\0')
-{
-if (*format == '%')
-{
-format++;
-switch (*format)
-{
-case 'c':
-putchar(va_arg(args, int));
-count++;
-break;
-case 's':
-count += puts(va_arg(args, char *));
-break;
-case '%':
-putchar('%');
-count++;
-break;
-case 'd':
-case 'i':
-printf("%d", va_arg(args, int));
-count++;
-break;
-default:
-break;
-}
-}
-else
-{
-putchar(*format);
-count++;
-}
-format++;
-}
-va_end(args);
-return (count);
+	va_start(args, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	while (format[i])
+	{
+		chars = 0;
+		if (format[i] == '%')
+		{
+			if (!format[i + 1] || (format[i + 1] == ' ' && !format[i + 2]))
+			{
+				count = -1;
+				break;
+			}
+			chars += get_function(format[i + 1], args);
+			if (chars == 0)
+				count += _putchar(format[i + 1]);
+			if (chars == -1)
+				count = -1;
+			i++;
+		}
+		else
+		{
+			(count == -1) ? (_putchar(format[i])) : (count += _putchar(format[i]));
+		}
+		i++;
+		if (count != -1)
+			count += chars;
+	}
+	va_end(args);
+	return (count);
 }
