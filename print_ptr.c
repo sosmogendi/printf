@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stdio.h>
 
-int _strcmp(char *, char *);
+nt _strcmp(char *, char *);
 
 /**
  * print_pointer - Print a number in hexadecimal format
